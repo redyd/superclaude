@@ -72,9 +72,17 @@ update_ecc() {
   done
 }
 
+merge_settings() {
+  local dst="$CLAUDE_DIR/settings.json"
+  mkdir -p "$CLAUDE_DIR"
+  [[ -L "$dst" ]] && rm "$dst"
+  [[ -f "$dst" ]] || echo '{}' > "$dst"
+  jq -s '.[0] * .[1]' "$dst" "$SETTINGS" > "$dst.tmp" && mv "$dst.tmp" "$dst"
+}
+
 link_config() {
-  log "Liens de configuration"
-  link "$SETTINGS" "$CLAUDE_DIR/settings.json"
+  log "Configuration"
+  merge_settings
   link "$REPO_DIR/claude/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
   link "$REPO_DIR/ponytail/config.json" "$HOME/.config/ponytail/config.json"
   # Un lien par skill, pour ne pas écraser d'éventuels skills installés à la main.
@@ -88,13 +96,13 @@ link_config() {
 # </dev/null empêche claude de consommer l'entrée de la boucle.
 install_plugins() {
   log "Marketplaces et plugins"
-  claude plugin marketplace add anthropics/claude-plugins-official </dev/null >/dev/null 2>&1 || true
+  claude plugin marketplace add anthropics/claude-plugins-official </dev/null 2>/dev/null || true
   jq -r '.extraKnownMarketplaces // {} | .[].source.repo' "$SETTINGS" | while read -r repo; do
-    claude plugin marketplace add "$repo" </dev/null >/dev/null 2>&1 || true
+    claude plugin marketplace add "$repo" </dev/null || true
   done
-  claude plugin marketplace update </dev/null >/dev/null 2>&1 || true
+  claude plugin marketplace update </dev/null || true
   jq -r '.enabledPlugins // {} | to_entries[] | select(.value) | .key' "$SETTINGS" | while read -r p; do
-    claude plugin install "$p" </dev/null >/dev/null 2>&1 && log "  $p" || warn "  échec : $p"
+    claude plugin install "$p" </dev/null || warn "échec : $p"
   done
 }
 
