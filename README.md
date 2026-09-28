@@ -1,4 +1,4 @@
-# superclaude
+# claude-config
 
 Stack Claude Code personnelle : Superpowers (méthode), skills ECC (Spring Boot, JPA, Docker,
 Postgres, API), Context7 (docs à jour), LSP (TS, Python, Java, C#), claude-mem (mémoire),
@@ -7,10 +7,10 @@ ponytail en mode lite (anti sur-engineering), frontend-design, Figma, Playwright
 ## Installation
 
 ```bash
-git clone https://github.com/redyd/superclaude.git ~/superclaude && ~/superclaude/install.sh
+git clone https://github.com/redyd/claude-config.git ~/claude-config && ~/claude-config/install.sh
 ```
 
-Le clone doit rester dans `~/superclaude` : la config de `~/.claude` pointe dessus par liens symboliques.
+Le clone doit rester dans `~/claude-config` : la config de `~/.claude` pointe dessus par liens symboliques.
 
 | Action | Commande |
 |---|---|
